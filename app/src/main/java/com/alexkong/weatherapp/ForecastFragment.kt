@@ -22,6 +22,8 @@ class ForecastFragment: Fragment() {
     private lateinit var viewModel: ForecastViewModel
     private lateinit var viewModelFactory: ForecastViewModelProvider
 
+    private var adapter: ForecastAdapter? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -52,17 +54,21 @@ class ForecastFragment: Fragment() {
     }
 
     private fun initializeUi() {
+        binding.rvForecast.layoutManager = LinearLayoutManager(context)
+        adapter = ForecastAdapter(mutableListOf())
+        binding.rvForecast.adapter = adapter
+
         viewModel.getForecast("Los Angeles, CA")
+
         binding.refreshLayoutForecast.setOnRefreshListener {
             Log.e("FORECAST", "REFRESHING")
-            viewModel.getForecast("Los Angeles")
+            viewModel.getForecast("Los Angeles, CA")
+            binding.refreshLayoutForecast.isRefreshing = false
         }
     }
 
     private fun showForecasts(days: List<Day>) {
-        val adapter = ForecastAdapter(days)
-        binding.rvForecast.layoutManager = LinearLayoutManager(context)
-        binding.rvForecast.adapter = adapter
+        adapter?.updateDays(days)
     }
 
     override fun onDestroyView() {

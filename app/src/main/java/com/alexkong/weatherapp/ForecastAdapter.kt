@@ -7,7 +7,7 @@ import com.alexkong.weatherapp.databinding.ItemForecastBinding
 import com.alexkong.weatherapp.model.Day
 
 class ForecastAdapter constructor(
-    private val days: List<Day>
+    private val days: MutableList<Day>
     ): RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastViewHolder {
@@ -21,6 +21,12 @@ class ForecastAdapter constructor(
 
     override fun getItemCount(): Int {
         return days.size
+    }
+
+    fun updateDays(newDays: List<Day>) {
+        days.clear()
+        days.addAll(newDays)
+        notifyDataSetChanged()
     }
 
     class ForecastViewHolder(
