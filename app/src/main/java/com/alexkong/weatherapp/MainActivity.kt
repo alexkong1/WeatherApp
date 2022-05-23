@@ -23,13 +23,4 @@ class MainActivity : AppCompatActivity() {
             .add(binding.container.id, ForecastFragment.newInstance(), "forecast")
             .commit()
     }
-
-    private fun getForecast() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val api: WeatherApi = retrofit.create(WeatherApi::class.java)
-    }
 }

@@ -1,9 +1,8 @@
-package com.alexkong.weatherapp
+package com.alexkong.weatherapp.model
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexkong.weatherapp.model.Forecast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -15,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ForecastViewModel : ViewModel() {
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/")
+        .baseUrl(VC_WEATHER_API_ENDPOINT)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
@@ -24,9 +23,9 @@ class ForecastViewModel : ViewModel() {
     private val _forecast = MutableLiveData<Forecast?>()
     val forecast get() = _forecast
 
-    fun getForecast() {
+    fun getForecast(location: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            api.getForecast().enqueue( object: Callback<Forecast> {
+            api.getForecast(locations = location).enqueue( object: Callback<Forecast> {
                 override fun onResponse(call: Call<Forecast>, response: Response<Forecast>) {
                     response.body()?.let {
                         forecast.postValue(it)
@@ -36,9 +35,12 @@ class ForecastViewModel : ViewModel() {
                 override fun onFailure(call: Call<Forecast>, t: Throwable) {
                     forecast.postValue(null)
                 }
-
             })
         }
 
+    }
+
+    companion object {
+        val VC_WEATHER_API_ENDPOINT = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/"
     }
 }
