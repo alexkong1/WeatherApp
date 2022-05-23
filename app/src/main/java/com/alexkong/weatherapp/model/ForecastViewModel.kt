@@ -13,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ForecastViewModel : ViewModel() {
 
+
     private val retrofit = Retrofit.Builder()
         .baseUrl(VC_WEATHER_API_ENDPOINT)
         .addConverterFactory(GsonConverterFactory.create())
@@ -41,6 +42,6 @@ class ForecastViewModel : ViewModel() {
     }
 
     companion object {
-        val VC_WEATHER_API_ENDPOINT = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/weatherdata/"
+        val VC_WEATHER_API_ENDPOINT = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/"
     }
 }
