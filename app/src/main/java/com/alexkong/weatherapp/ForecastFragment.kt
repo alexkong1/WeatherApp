@@ -50,6 +50,10 @@ class ForecastFragment: Fragment() {
 
     private fun initializeUi() {
         viewModel.getForecast("Los Angeles, CA")
+        binding.refreshLayoutForecast.setOnRefreshListener {
+            Log.e("FORECAST", "REFRESHING")
+            viewModel.getForecast("Los Angeles")
+        }
     }
 
     override fun onDestroyView() {

@@ -41,6 +41,6 @@ class ForecastViewModel : ViewModel() {
     }
 
     companion object {
-        val VC_WEATHER_API_ENDPOINT = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/"
+        val VC_WEATHER_API_ENDPOINT = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/weatherdata/"
     }
 }
