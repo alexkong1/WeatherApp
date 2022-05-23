@@ -13,7 +13,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ForecastViewModel : ViewModel() {
 
-
     private val retrofit = Retrofit.Builder()
         .baseUrl(VC_WEATHER_API_ENDPOINT)
         .addConverterFactory(GsonConverterFactory.create())
@@ -26,7 +25,7 @@ class ForecastViewModel : ViewModel() {
 
     fun getForecast(location: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            api.getForecast(locations = location).enqueue( object: Callback<Forecast> {
+            api.getTimelineForecast(locations = location).enqueue( object: Callback<Forecast> {
                 override fun onResponse(call: Call<Forecast>, response: Response<Forecast>) {
                     response.body()?.let {
                         forecast.postValue(it)
@@ -42,6 +41,6 @@ class ForecastViewModel : ViewModel() {
     }
 
     companion object {
-        val VC_WEATHER_API_ENDPOINT = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/"
+        const val VC_WEATHER_API_ENDPOINT = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/"
     }
 }

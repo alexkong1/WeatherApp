@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.alexkong.weatherapp.databinding.FragmentForecastBinding
+import com.alexkong.weatherapp.model.Day
 import com.alexkong.weatherapp.model.ForecastViewModel
 import com.alexkong.weatherapp.model.ForecastViewModelProvider
 
@@ -39,13 +41,14 @@ class ForecastFragment: Fragment() {
     }
 
     private fun initializeObservers() {
-        viewModel.forecast.observe (viewLifecycleOwner, Observer { forecast ->
+        viewModel.forecast.observe (viewLifecycleOwner) { forecast ->
             forecast?.let {
                 Log.e("FORECAST API", forecast.toString())
+                showForecasts(it.days)
             } ?: run {
                 Log.e("FORECAST API", "ERROR")
             }
-        })
+        }
     }
 
     private fun initializeUi() {
@@ -54,6 +57,12 @@ class ForecastFragment: Fragment() {
             Log.e("FORECAST", "REFRESHING")
             viewModel.getForecast("Los Angeles")
         }
+    }
+
+    private fun showForecasts(days: List<Day>) {
+        val adapter = ForecastAdapter(days)
+        binding.rvForecast.layoutManager = LinearLayoutManager(context)
+        binding.rvForecast.adapter = adapter
     }
 
     override fun onDestroyView() {
