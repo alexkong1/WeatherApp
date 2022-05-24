@@ -28,6 +28,17 @@ interface WeatherApi {
         @Query("key") key: String = API_KEY
     ): Call<Forecast>
 
+    /**
+     * new endpoint for the Visual Crossing Timeline Weather API
+     */
+    @Headers("Accept: application/json")
+    @GET("timeline/{locations}/{date}/")
+    fun getTimelineForecastByDate(
+        @Path("locations") locations: String? = null,
+        @Path("date") date: String? = "",
+        @Query("key") key: String = API_KEY
+    ): Call<Forecast>
+
     companion object {
         const val API_KEY = "3FS42PHHBEA5BRU6Z3QL83FY3"
         const val DEFAULT_HOURS = 24

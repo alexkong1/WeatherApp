@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.29936594202898553" />
         <entry key="app/src/main/res/layout/fragment_forecast.xml" value="0.29936594202898553" />
+        <entry key="app/src/main/res/layout/fragment_selected_date.xml" value="0.17447916666666666" />
         <entry key="app/src/main/res/layout/item_forecast.xml" value="0.1" />
         <entry key="app/src/main/res/xml/network_security_config.xml" value="0.1" />
       </map>

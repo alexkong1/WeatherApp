@@ -23,9 +23,12 @@ class ForecastViewModel : ViewModel() {
     private val _forecast = MutableLiveData<Forecast?>()
     val forecast get() = _forecast
 
+    private val _selectedDateForecast = MutableLiveData<Forecast?>()
+    val selectedDateForecast get() = _selectedDateForecast
+
     fun getForecast(location: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            api.getTimelineForecast(locations = location).enqueue( object: Callback<Forecast> {
+            api.getTimelineForecast(locations = location).enqueue(object : Callback<Forecast> {
                 override fun onResponse(call: Call<Forecast>, response: Response<Forecast>) {
                     response.body()?.let {
                         forecast.postValue(it)
@@ -37,8 +40,24 @@ class ForecastViewModel : ViewModel() {
                 }
             })
         }
-
     }
+
+    fun getForecastByDate(location: String, date: String? = null) {
+        viewModelScope.launch(Dispatchers.IO) {
+            api.getTimelineForecastByDate(locations = location, date = date).enqueue(object : Callback<Forecast> {
+                override fun onResponse(call: Call<Forecast>, response: Response<Forecast>) {
+                    response.body()?.let {
+                        selectedDateForecast.postValue(it)
+                    }
+                }
+
+                override fun onFailure(call: Call<Forecast>, t: Throwable) {
+                    selectedDateForecast.postValue(null)
+                }
+            })
+        }
+    }
+
 
     companion object {
         const val VC_WEATHER_API_ENDPOINT = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/"

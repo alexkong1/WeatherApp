@@ -6,32 +6,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.alexkong.weatherapp.databinding.FragmentForecastBinding
-import com.alexkong.weatherapp.model.Day
+import com.alexkong.weatherapp.databinding.FragmentSelectedDateBinding
 import com.alexkong.weatherapp.model.ForecastViewModel
 import com.alexkong.weatherapp.model.ForecastViewModelProvider
 
-class ForecastFragment: Fragment(), DateClickListener {
+class SelectedDateFragment: Fragment() {
 
-    private var _binding: FragmentForecastBinding? = null
+    private var _binding: FragmentSelectedDateBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var viewModel: ForecastViewModel
     private lateinit var viewModelFactory: ForecastViewModelProvider
-
-    private var adapter: ForecastAdapter? = null
-
-    private var listener: DateClickListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentForecastBinding.inflate(inflater, container, false)
+        _binding = FragmentSelectedDateBinding.inflate(inflater, container, false)
         viewModelFactory = ForecastViewModelProvider()
         viewModel = ViewModelProvider(this, viewModelFactory)[ForecastViewModel::class.java]
         val view = binding.root
@@ -45,10 +38,14 @@ class ForecastFragment: Fragment(), DateClickListener {
     }
 
     private fun initializeObservers() {
-        viewModel.forecast.observe (viewLifecycleOwner) { forecast ->
+        viewModel.selectedDateForecast.observe (viewLifecycleOwner) { forecast ->
             forecast?.let {
                 Log.e("FORECAST API", forecast.toString())
-                showForecasts(it.days)
+                it.currentConditions.let { conditions ->
+                    binding.tvSelectedDate.text = conditions.datetime
+                    binding.tvSelectedDateTemp.text = conditions.temp.toString()
+                }
+                binding.tvSelectedDateCondition.text = it.description
             } ?: run {
                 Log.e("FORECAST API", "ERROR")
             }
@@ -56,21 +53,9 @@ class ForecastFragment: Fragment(), DateClickListener {
     }
 
     private fun initializeUi() {
-        binding.rvForecast.layoutManager = LinearLayoutManager(context)
-        adapter = ForecastAdapter(dateClickListener = this)
-        binding.rvForecast.adapter = adapter
-
-        viewModel.getForecast("Los Angeles, CA")
-
-        binding.refreshLayoutForecast.setOnRefreshListener {
-            Log.e("FORECAST", "REFRESHING")
-            viewModel.getForecast("Los Angeles, CA")
-            binding.refreshLayoutForecast.isRefreshing = false
+        arguments?.getString(SELECTED_DATE)?.let {
+            viewModel.getForecastByDate("Los Angeles, CA", it)
         }
-    }
-
-    private fun showForecasts(days: List<Day>) {
-        adapter?.updateDays(days)
     }
 
     override fun onDestroyView() {
@@ -78,19 +63,13 @@ class ForecastFragment: Fragment(), DateClickListener {
         _binding = null
     }
 
-    override fun onDateClicked(date: String) {
-        listener?.onDateClicked(date)
-    }
-
-    fun addClickListener(listener: DateClickListener): ForecastFragment {
-        this.listener = listener
-        return this
-    }
-
     companion object {
-        fun newInstance(): ForecastFragment {
-            val frag = ForecastFragment()
+        const val SELECTED_DATE = "selectedDate"
+
+        fun newInstance(date: String): SelectedDateFragment {
+            val frag = SelectedDateFragment()
             val args = Bundle()
+            args.putString(SELECTED_DATE, date)
             frag.arguments = args
             return frag
         }

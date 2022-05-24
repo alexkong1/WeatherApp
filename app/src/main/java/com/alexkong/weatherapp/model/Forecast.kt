@@ -27,9 +27,11 @@ data class Forecast(
     val description: String,
     val days: List<Day>,
     val alerts: List<Alert>,
-    val currentCondition: Conditions
+    val currentConditions: Conditions
 ){
     data class Conditions(
+        @SerializedName("datetime")
+        @Expose
         val datetime: String,
         val datetimeEpoch: Int,
         val temp: Double
