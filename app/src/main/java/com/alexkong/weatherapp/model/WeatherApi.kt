@@ -29,7 +29,8 @@ interface WeatherApi {
     ): Call<Forecast>
 
     /**
-     * new endpoint for the Visual Crossing Timeline Weather API
+     * new endpoint for the Visual Crossing Timeline Weather API, date-specific
+     * would've tried to combine this with the previous method since they're very similar
      */
     @Headers("Accept: application/json")
     @GET("timeline/{locations}/{date}/")

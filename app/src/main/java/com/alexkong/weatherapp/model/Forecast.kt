@@ -24,10 +24,10 @@ data class Forecast(
     val tzoffset: Int,
     @SerializedName("description")
     @Expose
-    val description: String,
-    val days: List<Day>,
-    val alerts: List<Alert>,
-    val currentConditions: Conditions
+    val description: String?,
+    val days: List<Day>?,
+    val alerts: List<Alert>?,
+    val currentConditions: Conditions?
 ){
     data class Conditions(
         @SerializedName("datetime")

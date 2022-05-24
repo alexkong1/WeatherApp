@@ -5,8 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alexkong.weatherapp.databinding.FragmentForecastBinding
@@ -48,7 +48,16 @@ class ForecastFragment: Fragment(), DateClickListener {
         viewModel.forecast.observe (viewLifecycleOwner) { forecast ->
             forecast?.let {
                 Log.e("FORECAST API", forecast.toString())
-                showForecasts(it.days)
+                binding.tvForecastNextDays.visibility = View.VISIBLE
+                binding.forecastCurrentConditions.apply {
+                    tvSelectedDate.text = getString(R.string.today_header)
+                    it.currentConditions?.temp?.let { temp ->
+                        tvSelectedDateTemp.text = getString(R.string.temp_in_f, temp)
+                    }
+
+                    tvSelectedDateDescription.text = it.description
+                }
+                showForecasts(it?.days)
             } ?: run {
                 Log.e("FORECAST API", "ERROR")
             }
@@ -69,7 +78,7 @@ class ForecastFragment: Fragment(), DateClickListener {
         }
     }
 
-    private fun showForecasts(days: List<Day>) {
+    private fun showForecasts(days: List<Day>?) {
         adapter?.updateDays(days)
     }
 

@@ -13,6 +13,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ForecastViewModel : ViewModel() {
 
+    // would've used dependency injection for this and probably moved to a separate Repository
+    // or other such data management files, given time
+
     private val retrofit = Retrofit.Builder()
         .baseUrl(VC_WEATHER_API_ENDPOINT)
         .addConverterFactory(GsonConverterFactory.create())

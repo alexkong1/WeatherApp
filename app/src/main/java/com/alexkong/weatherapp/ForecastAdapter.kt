@@ -24,10 +24,12 @@ class ForecastAdapter constructor(
         return days.size
     }
 
-    fun updateDays(newDays: List<Day>) {
-        days.clear()
-        days.addAll(newDays)
-        notifyDataSetChanged()
+    fun updateDays(newDays: List<Day>?) {
+        newDays?.let {
+            days.clear()
+            days.addAll(newDays)
+            notifyDataSetChanged()
+        }
     }
 
     class ForecastViewHolder(
@@ -37,7 +39,7 @@ class ForecastAdapter constructor(
 
         fun bindViewHolder(day: Day) {
             binding.tvForecastDate.text = day.datetime
-            binding.tvForecastTemp.text = day.temp.toString()
+            binding.tvForecastTemp.text = itemView.context.getString(R.string.temp_in_f, day.temp)
             binding.root.setOnClickListener {
                 dateClickListener.onDateClicked(day.datetime)
             }

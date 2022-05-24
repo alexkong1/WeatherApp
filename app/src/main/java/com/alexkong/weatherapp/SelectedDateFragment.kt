@@ -41,11 +41,11 @@ class SelectedDateFragment: Fragment() {
         viewModel.selectedDateForecast.observe (viewLifecycleOwner) { forecast ->
             forecast?.let {
                 Log.e("FORECAST API", forecast.toString())
-                it.currentConditions.let { conditions ->
-                    binding.tvSelectedDate.text = conditions.datetime
-                    binding.tvSelectedDateTemp.text = conditions.temp.toString()
+                it.days?.get(0)?.let { conditions ->
+                    binding.selectedDateCurrentCondition.tvSelectedDate.text = conditions.datetime
+                    binding.selectedDateCurrentCondition.tvSelectedDateTemp.text = context?.getString(R.string.temp_in_f, conditions.temp)
                 }
-                binding.tvSelectedDateCondition.text = it.description
+                binding.selectedDateCurrentCondition.tvSelectedDateDescription.text = it.description ?: ""
             } ?: run {
                 Log.e("FORECAST API", "ERROR")
             }

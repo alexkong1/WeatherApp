@@ -1,3 +1,6 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Weather App</string>
+    <string name="next_ten_days">10-Day Forecast</string>
+    <string name="temp_in_f" tools:ignore="ExtraTranslation">%1$.0f F</string>
+    <string name="today_header">Today\'s Forecast</string>
 </resources>
