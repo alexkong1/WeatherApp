@@ -40,7 +40,6 @@ class SelectedDateFragment: Fragment() {
     private fun initializeObservers() {
         viewModel.selectedDateForecast.observe (viewLifecycleOwner) { forecast ->
             forecast?.let {
-                Log.e("FORECAST API", forecast.toString())
                 it.days?.get(0)?.let { conditions ->
                     binding.selectedDateCurrentCondition.tvSelectedDate.text = conditions.datetime
                     binding.selectedDateCurrentCondition.tvSelectedDateTemp.text = context?.getString(R.string.temp_in_f, conditions.temp)
@@ -54,7 +53,7 @@ class SelectedDateFragment: Fragment() {
 
     private fun initializeUi() {
         arguments?.getString(SELECTED_DATE)?.let {
-            viewModel.getForecastByDate("Los Angeles, CA", it)
+            viewModel.getForecastByDate(ForecastFragment.LOCATION_LA, it)
         }
     }
 

@@ -19,25 +19,24 @@ class MainActivity : AppCompatActivity(), DateClickListener {
 
     private fun initializeUi() {
         supportFragmentManager.beginTransaction()
-            .add(binding.fragmentForecast.id, ForecastFragment.newInstance().addClickListener(this), "forecast")
+            .add(binding.container.id, ForecastFragment.newInstance().addClickListener(this), "forecast")
             .addToBackStack(null)
             .commit()
+
     }
 
     override fun onDateClicked(date: String) {
         Log.e("DATE CLICKED", date)
         supportFragmentManager.beginTransaction()
-            .add(binding.fragmentForecast.id, SelectedDateFragment.newInstance(date), "selected date")
+            .add(binding.container.id, SelectedDateFragment.newInstance(date), "selected date")
             .addToBackStack(null)
             .commit()
     }
 
     override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount > 1) {
-            Log.i("MainActivity", "popping backstack")
             supportFragmentManager.popBackStack()
         } else {
-            Log.i("MainActivity", "nothing on backstack, calling super")
             super.onBackPressed()
             finish()
         }

@@ -48,7 +48,6 @@ class ForecastFragment: Fragment(), DateClickListener {
     private fun initializeObservers() {
         viewModel.forecast.observe (viewLifecycleOwner) { forecast ->
             forecast?.let {
-                Log.e("FORECAST API", forecast.toString())
                 binding.tvForecastNextDays.visibility = View.VISIBLE
                 binding.forecastCurrentConditions.apply {
                     tvSelectedDate.text = getString(R.string.today_header)
@@ -58,7 +57,12 @@ class ForecastFragment: Fragment(), DateClickListener {
 
                     tvSelectedDateDescription.text = it.description
                 }
-                showForecasts(it?.days)
+                showForecasts(it.days)
+
+                binding.refreshLayoutForecast.setOnRefreshListener {
+                    viewModel.getForecast(LOCATION_LA)
+                    binding.refreshLayoutForecast.isRefreshing = false
+                }
             } ?: run {
                 Log.e("FORECAST API", "ERROR")
             }
@@ -66,24 +70,24 @@ class ForecastFragment: Fragment(), DateClickListener {
     }
 
     private fun initializeUi() {
-        adapter = ForecastAdapter(dateClickListener = this)
-        binding.rvForecast.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = this@ForecastFragment.adapter
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL))
-        }
 
-        viewModel.getForecast("Los Angeles, CA")
+        viewModel.getForecast(LOCATION_LA)
 
-        binding.refreshLayoutForecast.setOnRefreshListener {
-            Log.e("FORECAST", "REFRESHING")
-            viewModel.getForecast("Los Angeles, CA")
-            binding.refreshLayoutForecast.isRefreshing = false
-        }
+
     }
 
     private fun showForecasts(days: List<Day>?) {
-        adapter?.updateDays(days)
+        if (adapter != null) {
+            adapter!!.updateDays(days)
+        } else {
+            adapter = ForecastAdapter(dateClickListener = this, days = days as MutableList<Day>)
+            binding.rvForecast.apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = this@ForecastFragment.adapter
+                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL))
+                visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -101,6 +105,8 @@ class ForecastFragment: Fragment(), DateClickListener {
     }
 
     companion object {
+        // set location for testing purposes, given time, would've added a location selection
+        const val LOCATION_LA = "Los Angeles, CA"
         fun newInstance(): ForecastFragment {
             val frag = ForecastFragment()
             val args = Bundle()
