@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alexkong.weatherapp.databinding.FragmentForecastBinding
 import com.alexkong.weatherapp.model.Day
@@ -65,9 +66,12 @@ class ForecastFragment: Fragment(), DateClickListener {
     }
 
     private fun initializeUi() {
-        binding.rvForecast.layoutManager = LinearLayoutManager(context)
         adapter = ForecastAdapter(dateClickListener = this)
-        binding.rvForecast.adapter = adapter
+        binding.rvForecast.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = this@ForecastFragment.adapter
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL))
+        }
 
         viewModel.getForecast("Los Angeles, CA")
 
